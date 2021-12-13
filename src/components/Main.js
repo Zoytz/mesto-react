@@ -40,12 +40,12 @@ function Main(props) {
         <ul className="cards page__list">
           {
             cards.map((card) => {
-              return <Card 
+              return (<Card 
               card={card} 
               key={card._id} 
               onCardClick={props.onCardClick}
               onDelCardClick={props.onDelCardClick}
-              />
+              />)
             })
           }
         </ul>
