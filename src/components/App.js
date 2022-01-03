@@ -42,13 +42,17 @@ function App() {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
 
     if (!isLiked) {
-      api.setLikeCard(card._id).then((newCard) => {
+      api.setLikeCard(card._id)
+      .then((newCard) => {
         setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
-      });
+      })
+      .catch((err) => console.log('Ошибка в handleCardLike', err));
     } else {
-      api.delLikeCard(card._id, isLiked).then((newCard) => {
+      api.delLikeCard(card._id)
+      .then((newCard) => {
         setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
-      });
+      })
+      .catch((err) => console.log('Ошибка в handleCardLike', err));
     }
 
   }
@@ -67,7 +71,7 @@ function App() {
       .then((newCard) => {
         setCards([newCard, ...cards]);
       })
-      .then((res) => setIsAddPlacePopupOpen(false))
+      .then((res) => closeAllPopups())
       .catch((err) => console.log('Ошибка в handleAddPlaceSubmit', err));
   }
 
@@ -100,29 +104,27 @@ function App() {
   //   setIsConfirmPopupOpen(true);
   // };
 
-  function closeAllPopups(evt) {
-    if (evt.target.classList.contains('popup_active') || evt.target.classList.contains('popup__close-btn')) {
+  function closeAllPopups() {
       setIsEditAvatarPopupOpen(false);
       setIsEditProfilePopupOpen(false);
       setIsAddPlacePopupOpen(false);
       setIsImagePopupOpen(false);
       setIsConfirmPopupOpen(false);
       setSelectedCard({});
-    }
 
   }
 
   function handleUpdateUser(data) {
     return api.editUserInfo(data)
       .then((res) => setCurrentUser(res))
-      .then((res) => setIsEditProfilePopupOpen(false))
+      .then((res) => closeAllPopups())
       .catch((err) => console.log('Ошибка в handleUpdateUser'));
   }
 
   function handleUpdateAvatar(data) {
     return api.editUserAvatar(data)
       .then((res) => setCurrentUser(res))
-      .then((res) => setIsEditAvatarPopupOpen(false))
+      .then((res) => closeAllPopups())
       .catch((err) => console.log('Ошибка в handleUpdateAvatar'));
   }
 
